@@ -1,9 +1,6 @@
 import pytest
-from mantisshrimp.imports import Path,json
-from mantisshrimp.utils import *
-from mantisshrimp.core import *
-from mantisshrimp.parsers import *
-
+from mantisshrimp.imports import Path,json,plt
+from mantisshrimp import *
 
 source = Path('../samples')
 @pytest.fixture
@@ -37,11 +34,19 @@ def test_coco_annotation_parser(annots_dict):
     assert annot.labels == [4]
 
 def test_coco_parser(annots_dict):
-    parser = COCOParser(annots_dict, source)
+    parser = COCOParser(annots_dict, source/'images')
     with np_local_seed(42): train_rs,valid_rs = parser.parse()
-    assert len(train_rs)+len(valid_rs) == 5
     r = train_rs[0]
+    assert len(train_rs)+len(valid_rs) == 5
     assert (r.info.h, r.info.w) == (427, 640)
     assert r.info.imageid == 0
     assert r.annot[0].bbox.xywh, [0.0, 73.89, 416.44, 305.13]
-    assert str(r.info.filepath) == '../samples/000000128372.jpg'
+    assert str(r.info.filepath) == '../samples/images/000000128372.jpg'
+
+def test_show_record(annots_dict, monkeypatch):
+    monkeypatch.setattr(plt, 'show', lambda: None)
+    parser = COCOParser(annots_dict, source / 'images')
+    with np_local_seed(42): train_rs, valid_rs = parser.parse()
+    r = train_rs[0]
+    show_record(r)
+

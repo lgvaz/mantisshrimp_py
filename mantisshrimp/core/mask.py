@@ -4,6 +4,7 @@ from ..imports import *
 from ..utils import *
 
 # TODO: Base class for Mask
+@dataclass
 class MaskArray:
     data: np.ndarray
 

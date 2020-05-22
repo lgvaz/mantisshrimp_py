@@ -5,7 +5,7 @@ from ..utils import *
 from .utils import *
 from matplotlib.collections import PatchCollection
 
-def show_annotation(im, labels=None, bboxes=None, masks=None, ax=None, figsize=None):
+def show_annotation(im, labels=None, bboxes=None, masks=None, ax=None, figsize=None, show=True):
     # Sample colors at the end
     ax = show_img(im, ax=ax, figsize=figsize or (10,10))
     polygons,colors = [],[]
@@ -24,3 +24,5 @@ def show_annotation(im, labels=None, bboxes=None, masks=None, ax=None, figsize=N
     ax.add_collection(p)
     p = PatchCollection(polygons, facecolor='none', edgecolors=colors, linewidths=2)
     ax.add_collection(p)
+
+    if show: plt.show()
