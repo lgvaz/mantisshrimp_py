@@ -5,9 +5,9 @@ from mantisshrimp.core import *
 from mantisshrimp.parsers import *
 
 
-source = Path('../samples/annotations.json')
+source = Path('../samples')
 @pytest.fixture
-def annots_dict(): return json.loads(source.read())
+def annots_dict(): return json.loads((source/'annotations.json').read())
 
 def test_image_info(annots_dict):
     ainfo = annots_dict['images'][0]
@@ -44,3 +44,4 @@ def test_coco_parser(annots_dict):
     assert (r.info.h, r.info.w) == (427, 640)
     assert r.info.imageid == 0
     assert r.annot[0].bbox.xywh, [0.0, 73.89, 416.44, 305.13]
+    assert str(r.info.filepath) == '../samples/000000128372.jpg'
