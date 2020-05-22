@@ -1,5 +1,4 @@
 from .splits import *
-from .record import *
 from .info_parser import *
 from .annotation_parser import *
 from .category_parser import *

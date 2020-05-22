@@ -1,19 +1,8 @@
-__all__ = ['ImageInfo', 'InfoParser']
+__all__ = ['InfoParser']
 
 from ..imports import *
-from ..utils import *
 from ..core import *
 from .splits import *
-
-@dataclass(frozen=True)
-class ImageInfo:
-    imageid: int
-    filepath: Union[str, Path]
-    h: int
-    w: int
-    split: int = 0
-
-    def __post_init__(self): super().__setattr__('filepath', self.filepath)
 
 
 class InfoParser:

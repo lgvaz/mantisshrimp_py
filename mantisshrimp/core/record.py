@@ -1,10 +1,19 @@
-__all__ = ['Instance', 'Annotation', 'Record']
+__all__ = ['ImageInfo', 'Instance', 'Annotation', 'Record']
 
 from ..imports import *
 from ..utils import *
 from ..core import *
-from .info_parser import ImageInfo
-from dataclasses import replace
+from dataclasses import replace, dataclass
+
+@dataclass(frozen=True)
+class ImageInfo:
+    imageid: int
+    filepath: Union[str, Path]
+    h: int
+    w: int
+    split: int = 0
+
+    def __post_init__(self): super().__setattr__('filepath', self.filepath)
 
 @dataclass
 class Instance:

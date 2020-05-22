@@ -1,7 +1,7 @@
 __all__ = ['DataParser']
 
 from ..imports import *
-from .record import *
+from ..core import *
 
 @funcs_kwargs
 class DataParser:

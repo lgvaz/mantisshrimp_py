@@ -3,7 +3,6 @@ __all__ = ['AnnotationParser']
 from ..imports import *
 from ..utils import *
 from ..core import *
-from .record import *
 
 class AnnotationParser:
     def __init__(self, data, source, catmap, idmap=None):
