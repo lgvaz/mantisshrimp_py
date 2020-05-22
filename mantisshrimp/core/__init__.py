@@ -3,3 +3,4 @@ from .id_map import *
 from .mask import *
 from .bbox import *
 from .record import *
+from .item import *
