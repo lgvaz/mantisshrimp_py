@@ -32,13 +32,12 @@ class InfoParser:
     def split(self, o): return random_split()
 
     def parse(self):
-        xs,imageids = [],[]
+        xs,imageids = [],set()
         for o in tqdm(self):
             self.prepare(o)
             imageid = self.idmap[self.imageid(o)]
             if imageid not in imageids:
-                imageids.append(imageid)
+                imageids.add(imageid)
                 xs.append(ImageInfo(imageid=imageid, filepath=self.filepath(o),
                                     split=self.split(o), h=self.h(o), w=self.w(o)))
         return xs
-

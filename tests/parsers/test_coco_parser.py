@@ -1,5 +1,6 @@
 import pytest
 from mantisshrimp.imports import Path,json
+from mantisshrimp.utils import *
 from mantisshrimp.core import *
 from mantisshrimp.parsers import *
 
@@ -34,3 +35,12 @@ def test_coco_annotation_parser(annots_dict):
     assert len(annots) == 5
     assert annot.imageid == 0
     assert annot.labels == [4]
+
+def test_coco_parser(annots_dict):
+    parser = COCOParser(annots_dict, source)
+    with np_local_seed(42): train_rs,valid_rs = parser.parse()
+    assert len(train_rs)+len(valid_rs) == 5
+    r = train_rs[0]
+    assert (r.info.h, r.info.w) == (427, 640)
+    assert r.info.imageid == 0
+    assert r.annot[0].bbox.xywh, [0.0, 73.89, 416.44, 305.13]

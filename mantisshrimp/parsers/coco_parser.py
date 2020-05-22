@@ -1,9 +1,10 @@
-__all__ = ['COCOInfoParser', 'COCOAnnotationParser', 'COCOCategoryParser']
+__all__ = ['COCOInfoParser', 'COCOAnnotationParser', 'COCOCategoryParser', 'COCOParser']
 
 from ..core import *
 from .info_parser import *
 from .annotation_parser import *
 from .category_parser import *
+from .data_parser import *
 
 class COCOInfoParser(InfoParser):
     def imageid(self, o): return o['id']
@@ -24,4 +25,10 @@ class COCOAnnotationParser(AnnotationParser):
 class COCOCategoryParser(CategoryParser):
     def id(self, o): return o['id']
     def name(self, o): return o['name']
+
+class COCOParser(DataParser):
+    def category_parser(self, data): return COCOCategoryParser(data['categories'])
+    def info_parser(self, data, source): return COCOInfoParser(data['images'], source)
+    def annotation_parser(self, data, source, **kwargs):
+        return COCOAnnotationParser(data['annotations'], source, **kwargs)
 
