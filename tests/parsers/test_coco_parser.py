@@ -1,0 +1,36 @@
+import pytest
+from mantisshrimp.imports import Path,json
+from mantisshrimp.core import *
+from mantisshrimp.parsers import *
+
+
+source = Path('../samples/annotations.json')
+@pytest.fixture
+def annots_dict(): return json.loads(source.read())
+
+def test_image_info(annots_dict):
+    ainfo = annots_dict['images'][0]
+    info = ImageInfo(ainfo['id'], ainfo['file_name'], ainfo['height'], ainfo['width'], 0)
+    assert info == ImageInfo(128372, filepath='000000128372.jpg', h=427, w=640, split=0)
+
+def test_info_parser(annots_dict):
+    parser = COCOInfoParser(annots_dict['images'], source=source)
+    infos = parser.parse()
+    assert len(infos) == 6
+    assert infos[0] == ImageInfo(0, filepath=source/'000000128372.jpg', h=427, w=640, split=0)
+
+def test_category_parser(annots_dict):
+    catparser = COCOCategoryParser(annots_dict['categories'])
+    catmap = catparser.parse()
+    assert catmap.cats[0].name == 'background'
+    assert len(catmap) == 81
+    assert catmap.cats[1:] == [Category(o['id'], o['name']) for o in annots_dict['categories']]
+
+def test_coco_annotation_parser(annots_dict):
+    catmap = COCOCategoryParser(annots_dict['categories']).parse()
+    annotparser = COCOAnnotationParser(annots_dict['annotations'], source/'images', catmap)
+    annots = annotparser.parse()
+    annot = annots[0]
+    assert len(annots) == 5
+    assert annot.imageid == 0
+    assert annot.labels == [4]

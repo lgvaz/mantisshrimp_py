@@ -1,9 +1,10 @@
-__all__ = ['Mask', 'MaskFile', 'RLE', 'Polygon']
+__all__ = ['MaskArray', 'MaskFile', 'RLE', 'Polygon']
 
 from ..imports import *
 from ..utils import *
 
-class Mask:
+# TODO: Base class for Mask
+class MaskArray:
     data: np.ndarray
 
     def __post_init__(self): self.data = self.data.astype(np.uint8)
@@ -18,15 +19,15 @@ class Mask:
     def shape(self): return self.data.shape
 
     @classmethod
-    def from_segmentations(cls, segmentations, h, w):
-        masks = []
+    def from_masks(cls, masks, h, w):
+        new = []
         # TODO: Instead of if checks, RLE and Polygon can return with extra dim
-        for o in segmentations:
+        for o in masks:
             m = o.to_mask(h, w).data
-            if isinstance(o, (RLE, Polygon)):  masks.append(m[None])
-            elif isinstance(o, MaskFile):      masks.append(m)
+            if isinstance(o, (RLE, Polygon)):  new.append(m[None])
+            elif isinstance(o, MaskFile):      new.append(m)
             else:                              raise ValueError(f'Segmented type {type(o)} not supported')
-        return cls(np.concatenate(masks))
+        return cls(np.concatenate(new))
 
 @dataclass
 class MaskFile:
@@ -36,7 +37,7 @@ class MaskFile:
         mask = open_img(self.filepath, gray=True)
         obj_ids = np.unique(mask)[1:]
         masks = mask==obj_ids[:, None, None]
-        return Mask(masks)
+        return MaskArray(masks)
     def to_erle(self, h, w): return self.to_mask(h,w).to_erle(h,w)
 
 @dataclass(frozen=True)
@@ -48,7 +49,7 @@ class RLE:
         for i, start_pixel in enumerate(self.counts[::2]):
             mask[start_pixel:start_pixel+self.counts[2*i+1]] = 1
         mask = mask.reshape((h, w), order='F')
-        return Mask(mask)
+        return MaskArray(mask)
     def to_erle(self, h, w):
         raise NotImplementedError('Convert counts to coco style')
         # return mask_utils.frPyObjects([{'counts':self.counts, 'size':[h,w]}], h, w)
@@ -76,6 +77,6 @@ class Polygon:
         erle = self.to_erle(h=h, w=w)
         mask = mask_utils.decode(erle).sum(axis=-1) # Sum is for unconnected polygons
         assert mask.max() == 1, 'Probable overlap in polygons'
-        return Mask(mask)
+        return MaskArray(mask)
     def to_erle(self, h, w): return mask_utils.frPyObjects(self.points, h, w)
 

@@ -2,6 +2,7 @@ __all__ = ['BBox']
 
 from ..imports import *
 
+@dataclass
 class BBox:
     pnts: List[int]
 
@@ -42,3 +43,4 @@ class BBox:
             # just went out of the image dimensions
             raise ValueError(f"invalid RLE or image dimensions: x1={x1} > shape[1]={w}")
         return cls.from_xyxy(x0, y0, x1, y1)
+
