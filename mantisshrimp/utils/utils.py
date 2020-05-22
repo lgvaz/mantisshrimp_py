@@ -1,6 +1,7 @@
 from ..imports import *
 
-__all__ = ['notnone', 'ifnotnone', 'last', 'lmap', 'allequal', 'cleandict', 'mergeds', 'zipsafe', 'np_local_seed']
+__all__ = ['notnone', 'ifnotnone', 'last', 'lmap', 'allequal', 'cleandict',
+           'mergeds', 'zipsafe', 'np_local_seed', 'pbar']
 
 def notnone(x): return x is not None
 
@@ -23,6 +24,8 @@ def mergeds(ds):
 def zipsafe(*its):
     if not allequal(lmap(len, its)): raise ValueError('The elements have different leghts')
     return zip(*its)
+
+def pbar(iter, show=True): return tqdm(iter) if show else iter
 
 @contextmanager
 def np_local_seed(seed):
