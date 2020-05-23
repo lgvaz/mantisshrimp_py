@@ -6,15 +6,15 @@ from ..core import *
 @funcs_kwargs
 class DataParser:
     _methods = 'info_parser annotation_parser'.split()
-    def __init__(self, data, source, **kwargs):
-        self.data,self.source = data,source
+    def __init__(self, data, source, catmap=None, **kwargs):
+        self.data,self.source,self.catmap = data,source,catmap
 
-    def category_parser(self, data):      raise NotImplementedError
-    def info_parser(self, data, source):   raise NotImplementedError
+    def category_parser(self, data):                          raise NotImplementedError
+    def info_parser(self, data, source):                      raise NotImplementedError
     def annotation_parser(self, data, source, catmap, idmap): raise NotImplementedError
 
     def parse(self, show_pbar=True):
-        catmap = self.category_parser(self.data).parse(show_pbar)
+        catmap = self.catmap or self.category_parser(self.data).parse(show_pbar)
         info_parser = self.info_parser(self.data, self.source)
         annotation_parser = self.annotation_parser(self.data, self.source, catmap=catmap, idmap=info_parser.idmap)
         imgs = L(info_parser.parse(show_pbar))
