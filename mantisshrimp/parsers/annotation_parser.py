@@ -20,13 +20,13 @@ class AnnotationParser:
     def mask(self, o): pass
     def iscrowd(self, o): return 0
 
-    def parse(self):
+    def parse(self, show_pbar=True):
         imageids = set()
         labels = defaultdict(list)
         iscrowds = defaultdict(list)
         bboxes = defaultdict(list)
         masks = defaultdict(list)
-        for o in tqdm(self):
+        for o in pbar(self, show_pbar):
             self.prepare(o) # TODO: Refactor with python 3.8 walrus syntax
             imageid = self.idmap[self.imageid(o)]
             labels[imageid].extend([self.catmap.id2i[id] for id in L(self.label(o))])

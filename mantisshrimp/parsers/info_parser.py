@@ -1,6 +1,7 @@
 __all__ = ['InfoParser']
 
 from ..imports import *
+from ..utils import *
 from ..core import *
 from .splits import *
 
@@ -20,9 +21,9 @@ class InfoParser:
     def w(self, o): raise NotImplementedError
     def split(self, o): return random_split()
 
-    def parse(self):
+    def parse(self, show_pbar=True):
         xs,imageids = [],set()
-        for o in tqdm(self):
+        for o in pbar(self, show_pbar):
             self.prepare(o)
             imageid = self.idmap[self.imageid(o)]
             if imageid not in imageids:

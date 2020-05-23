@@ -1,4 +1,5 @@
-__all__ = ['sample_category_parser', 'sample_info_parser', 'sample_annotation_parser', 'sample_data_parser']
+__all__ = ['sample_category_parser', 'sample_info_parser', 'sample_annotation_parser', 'sample_data_parser',
+           'sample_records']
 
 from mantisshrimp.all import *
 
@@ -17,3 +18,6 @@ def sample_annotation_parser():
 
 def sample_data_parser():
     return COCOParser(annots_dict, source/'images')
+
+def sample_records():
+    return test_utils.sample_data_parser().parse(show_pbar=False)
