@@ -1,5 +1,5 @@
 __all__ = ['sample_category_parser', 'sample_info_parser', 'sample_annotation_parser', 'sample_data_parser',
-           'sample_records']
+           'sample_records', 'sample_datasets']
 
 from mantisshrimp.all import *
 
@@ -20,4 +20,10 @@ def sample_data_parser():
     return COCOParser(annots_dict, source/'images')
 
 def sample_records():
-    return test_utils.sample_data_parser().parse(show_pbar=False)
+    with np_local_seed(42):
+        return sample_data_parser().parse(show_pbar=False)
+
+def sample_datasets():
+    train_rs, valid_rs = sample_records()
+    return Dataset(train_rs), Dataset(valid_rs)
+
