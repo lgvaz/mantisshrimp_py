@@ -8,22 +8,22 @@ from .mask import *
 @dataclass
 class Item:
     img: np.ndarray
-    iid: int
+    imageid: int
     labels: List[int]
     iscrowds: List[int]
     bboxes: List[BBox] = None
     masks: MaskArray = None
-
     #     keypoints: #TODO
+
     @classmethod
     def from_record(cls, r):
         return cls(
-            img=open_img(r.iinfo.fp),
-            iid=r.iinfo.iid,
-            labels=r.annot.oids,
+            img=open_img(r.info.filepath),
+            imageid=r.info.imageid,
+            labels=r.annot.labels,
             iscrowds=r.annot.iscrowds,
             bboxes=r.annot.bboxes,
-            masks=MaskArray.from_segs(r.annot.segs, r.iinfo.h, r.iinfo.w) if r.annot.segs else None,
+            masks=MaskArray.from_masks(r.annot.masks, r.info.h, r.info.w) if r.annot.masks else None,
             # keypoints: TODO
         )
 
