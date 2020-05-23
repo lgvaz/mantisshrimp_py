@@ -32,6 +32,3 @@ from fastcore.imports import *
 from fastcore.test import *
 from fastcore.foundation import *
 from fastcore.utils import *
-
-try: import albumentations as A
-except ModuleNotFoundError: pass
