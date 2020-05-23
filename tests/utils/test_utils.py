@@ -26,3 +26,4 @@ def test_allequal():
 def test_mergeds():
     ds = [{'a': 2}, {'b': 3}, {'a': 1}, {'c': 0}, {'b': 5}, {'a': 3}]
     assert mergeds(ds) == {'a': [2, 1, 3], 'b': [3, 5], 'c': [0]}
+
