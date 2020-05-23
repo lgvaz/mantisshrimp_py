@@ -1,6 +1,7 @@
 import pytest
-from mantisshrimp.imports import torch, tensor
 from mantisshrimp import *
+from mantisshrimp.imports import torch, tensor
+from mantisshrimp.core.item import _fake_box
 
 @pytest.fixture
 def item():
@@ -35,4 +36,12 @@ def test_item2tensor(item):
     assert y['masks'].dtype == torch.uint8
     assert y['masks'].shape == (16,427,640)
 
+
+def test_item2tensor_empty(item):
+    item = item.replace(bboxes=[], labels=[], iscrowds=[])
+    x, y = item2tensor(item)
+    assert (y['boxes'] == tensor([_fake_box], dtype=torch.float)).all()
+    assert y['labels'] == tensor([0])
+    assert y['iscrowd'] == tensor([0])
+    assert y['area'] == tensor([4])
 
