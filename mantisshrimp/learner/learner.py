@@ -17,7 +17,8 @@ class Learner:
         self.m.prepare_optimizers(self.opt_fn, lr, sched_fn=lr_sched_fn)
         gpus = ifnone(gpus, self.gpus)
         cbs = self.cbs + L(LearningRateLogger()) + L(callbacks)
-        trainer = Trainer(max_epochs=max_epochs, logger=self.logger, callbacks=cbs, gpus=gpus, **kwargs)
+        trainer = Trainer(max_epochs=max_epochs, logger=self.logger, callbacks=cbs,
+                          gpus=gpus, weights_summary=None, **kwargs)
         trainer.fit(self.m, self.train_dl, self.valid_dl)
 
     @delegates(Trainer.__init__)
@@ -33,4 +34,5 @@ class Learner:
     def lr_find(self, gpus=None, **kwargs):
         self.m.prepare_optimizers(self.opt_fn, 0)
         gpus = ifnone(gpus, self.gpus)
-        return Trainer(gpus=gpus, **kwargs).lr_find(self.m, self.train_dl, self.valid_dl)
+        trainer = Trainer(gpus=gpus, weights_summary=None, **kwargs)
+        return trainer.lr_find(self.m, self.train_dl, self.valid_dl)
