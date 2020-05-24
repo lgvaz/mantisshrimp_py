@@ -14,7 +14,7 @@ class MantisRCNN(LightningModule):
 
     def predict(self, ims=None, rs=None):
         if bool(ims) == bool(rs): raise ValueError('You should either pass ims or rs')
-        if notnone(rs): ims = [open_img(o.iinfo.fp) for o in rs]
+        if notnone(rs): ims = [open_img(o.info.filepath) for o in rs]
         xs = [im2tensor(o).to(model_device(self)) for o in ims]
         self.eval()
         return ims, self(xs)
